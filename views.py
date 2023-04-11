@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout,authenticate
 from django.contrib import messages
-from django.views.decorators.http import require_POST
-
+from .form import SignUpForm
 
 # Create your views here.
 def HomePageView(request):
@@ -20,8 +19,21 @@ def HomePageView(request):
             messages.info(request, 'login failed! Please try again...')            
     return render(request, 'home.html', {})
 
-def LoginPageView(request):
-    return render(request, 'login.html', {})
+def register_view(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Authenticate
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            messages.success(request, 'Yuo have Successful register!')
+            return redirect('home')
+        else:
+            form = SignUpForm()   
+            return render(request, 'register.html', {'form': form})
 
 
 
