@@ -24,16 +24,17 @@ def register_view(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
-            # Authenticate
+            # Authenticate and login
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             user = authenticate(username=username, password=password)
             login(request, user)
-            messages.success(request, 'Yuo have Successful register!')
+            messages.success(request, 'You have Successful registered! {username}')
             return redirect('home')
-        else:
+    else:
             form = SignUpForm()   
             return render(request, 'register.html', {'form': form})
+    return render(request, 'register.html', {'form': form})
 
 
 
