@@ -16,10 +16,10 @@ def HomePageView(request):
         user = authenticate(request, username=username, password =password)
         if user is not None:
             login(request, user)
-            messages.success(request, f'Hello {username}!')
+            messages.success(request, f'Welcome {username}! 👋')
             return redirect('home')
         else:
-            messages.info(request, 'login failed! Please try again...')            
+            messages.error(request, 'login failed! Please try again...')            
     return render(request, 'home.html', {'records': records})
 
 def register_view(request):
@@ -43,7 +43,7 @@ def register_view(request):
 
 def logout_view(request):
     logout(request)
-    messages.success(request, 'You have been logged out!')
+    messages.info(request, 'You have been logged out!')
     return redirect('home')
 
 def customer_record(request, pk):
@@ -52,7 +52,7 @@ def customer_record(request, pk):
 		customer_record = Record.objects.get(id=pk)
 		return render(request, 'record.html', {'customer_record':customer_record})
 	else:
-		messages.success(request, "You Must Be Logged In To View That Page...")
+		messages.warning(request, "You Must Be Logged In To View That Page...")
 		return redirect('home')
 
 def delete_record(request, pk):
@@ -61,12 +61,12 @@ def delete_record(request, pk):
             record = Record.objects.get(id=pk)
             record_id = record.id
             record.delete()
-            messages.success(request, f"Record no: {record_id} Deleted Successfully...")
+            messages.info(request, f"Record no: {record_id} Deleted Successfully...")
         except Record.DoesNotExist:
             messages.error(request, "Record does not exist.")
         return redirect('home')
     else:
-        messages.success(request, "You must be logged in to do that.")
+        messages.warning(request, "You must be logged in to do that.")
         return redirect('home')
 
 def add_record(request):
@@ -79,7 +79,7 @@ def add_record(request):
 				return redirect('home')
 		return render(request, 'add_record.html', {'form':form})
 	else:
-		messages.success(request, "You Must Be Logged In...")
+		messages.warning(request, "You Must Be Logged In...")
 		return redirect('home')
 
 def update_record(request, pk):
@@ -92,5 +92,5 @@ def update_record(request, pk):
 			return redirect('home')
 		return render(request, 'update_record.html', {'form':form})
 	else:
-		messages.success(request, "You Must Be Logged In...")
+		messages.warning(request, "You Must Be Logged In...")
 		return redirect('home')
