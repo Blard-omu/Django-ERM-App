@@ -6,7 +6,7 @@ from .models import Record
 
 # Create your views here.
 def HomePageView(request):
-    # Populating the Recond on homepage
+    # Populating the Record on homepage
     records = Record.objects.all()
     # check to see if logged in user
     if request.method == 'POST':
